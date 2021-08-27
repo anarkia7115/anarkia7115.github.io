@@ -40,53 +40,93 @@ import {
 } from "react-router-dom";
 import Carousel from "./Carousel";
 
+interface Screenshot {
+  url: string
+  description: string
+}
+
 interface Project {
   name: string
   coverUrl: string
-  path: string
+  id: string
   description: string
-  screenShotUrls?: string[]
+  screenshots: Screenshot[]
 }
 
 const projects:Project[] = [
   {
     name: "Data-viz for renting v2", 
     coverUrl: housingInfoCoverUrl, 
-    path: "/housing_info", 
+    id: "housing_info", 
     description: "Make renters find house easier. ", 
-    screenShotUrls: [housingInfoSsUrl], 
+    screenshots: [{
+      url:housingInfoSsUrl, 
+      description: "hexbin heatmap, "+
+    "price histogram, "+
+    "and house around mouse. ",
+
+    }], 
   }, 
   {
     name:"Knowledge Exploration System for News", 
     coverUrl: newsSnorkelCoverUrl, 
-    path: "/news_snorkel", 
+    id: "news_snorkel", 
     description: "Explore Knowledge visually in news. ", 
-    screenShotUrls: [newsSnorkelSs0Url, newsSnorkelSs1Url, newsSnorkelSs2Url]
+    screenshots: [{
+      url: newsSnorkelSs0Url, 
+      description: "Visualization of entities in news as a network"
+    }, 
+    {
+      url:newsSnorkelSs1Url, 
+      description: "News filter(label function) and filter results. "
+    },
+    {
+      url: newsSnorkelSs2Url, 
+      description: "Span query and it's results. "
+    }]
   }, 
   {
     name: "Scrape Helper", 
     coverUrl: scrapeHelperCoverUrl, 
-    path: "/scrape_helper", 
+    id: "scrape_helper", 
     description: "Makes the construction of web scraper easier. ", 
-    screenShotUrls: [scrapeHelperSs0Url, scrapeHelperSs1Url, scrapeHelperSs2Url]
+    screenshots: [{
+      url:scrapeHelperSs0Url, 
+      description: "Auto generated scrapy code on CNN news. "
+    }, {
+      url:scrapeHelperSs1Url, 
+      description: "Create scrapper on imdb. "
+    }, {
+      url:scrapeHelperSs2Url, 
+      description: "Extracted json on imdb. "
+    }]
   }, 
   {
     name:"Github timeline", 
     coverUrl: timelineCoverUrl, 
-    path: "/timeline", 
+    id: "timeline", 
     description: "This project visualized my github project timeline using bokeh. ",
-    screenShotUrls: [timelineSsUrl]
+    screenshots: [{
+      url:timelineSsUrl, 
+      description: "Visualization of my github project timeline using bokeh. "
+    }]
   }, 
   {
-    name: "Sentimental Analysis Visualization on Any Web Page", 
+    name: "Sentiment Analysis Visualization on Any Web Page", 
     coverUrl: newsVisCoverUrl, 
-    path: "/news_vis", 
-    description: "It's a chrome extension which visualize sentimental analysis results on web pages directly. "+
-    "It can visualize sentimental analysis results of any web pages including "+
+    id: "news_vis", 
+    description: "It's a chrome extension which visualize sentiment analysis results on web pages directly. "+
+    "It can visualize sentiment analysis results of any web pages including "+
     "news, customer reviews and social media. "+
     "The views of visualization including highlight of text content based on "+
     "sentiment score and keyword network based on co-occurrence in sentence. ", 
-    screenShotUrls: [newsVisSs0Url, newsVisSs1Url]
+    screenshots: [{
+      url:newsVisSs0Url, 
+      description: "Sentiment analysis on cnn home page. "
+    }, {
+      url:newsVisSs1Url, 
+      description: "Sentiment analysis on amazon product reviews. "
+    }]
   }
 ]
 
@@ -105,14 +145,14 @@ function ProjectList() {
       </div>
     })
   return(
-    <div className="text-center">
-      <h2>Projects</h2>
+    <div className="mb-5">
+      <h2 className="text-center">Projects</h2>
       <Router>
         {projectsComp}
         <Switch>
           {projects.map((p)=>
-            <Route key={p.name} path={p.path}>
-              <ProjectDetail detail={p}/>
+            <Route key={p.name} path={"/"+p.id}>
+              <ProjectDetail id={p.id} detail={p}/>
             </Route>
           )}
         </Switch>
@@ -127,7 +167,7 @@ function ProjectThumbnail(props:{detail:Project}) {
     <div 
       className="m-2"
     >
-      <Link to={p.path}>
+      <Link to={"/"+p.id}>
         <img src={p.coverUrl} className="img-thumbnail" alt={p.name}/>
       </Link>
     </div>
@@ -135,16 +175,15 @@ function ProjectThumbnail(props:{detail:Project}) {
   )
 }
 
-function ProjectDetail(props:{detail:Project}) {
+function ProjectDetail(props:{id:string, detail:Project}) {
   const p = props.detail
   return (
-    <div>
+    <div id={props.id}>
       <h3>{p.name}</h3>
       <p>{p.description}</p>
-      <Carousel key={p.name} images={p.screenShotUrls.map(url=>({
-        url: url, 
-        name: p.name, 
-        description: p.description, 
+      <Carousel key={p.name} images={p.screenshots.map(ss=>({
+        url: ss.url, 
+        title: ss.description, 
       }))}/>
 
     </div>

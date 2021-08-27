@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "parcel src/index.html",
-    "build": "PARCEL_WOKERS=0 parcel build src/index.html"
+    "build": "PARCEL_WOKERS=0 parcel build src/index.html --dist-dir .."
   },
   "devDependencies": {
     "@parcel/transformer-image": "2.0.0-rc.0",

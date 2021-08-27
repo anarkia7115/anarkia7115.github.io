@@ -1,7 +1,7 @@
 import classNames from "classnames"
 import { useState } from "react"
 
-function Carousel(props:{images: {url:string, name:string, description:string}[]}) {
+function Carousel(props:{images: {url:string, title?:string, description?:string}[]}) {
 
   const [activeIdx, setActiveIdx] = useState(0)
 
@@ -30,18 +30,18 @@ function Carousel(props:{images: {url:string, name:string, description:string}[]
     setActiveIdx(idx)
   }
 
-  const oneCarousel = (idx:number, url:string, title:string, description:string, isActive:boolean)=>
+  const oneCarousel = (idx:number, url:string, isActive:boolean, title:string, description?:string)=>
     <div 
       key={idx}
-      className={classNames("carousel-item", isActive?"active":undefined)}
-      // style={{width:"60%"}}
+      className={classNames("mx-auto", "carousel-item", isActive?"active":undefined)}
+      style={{width:"80%"}}
     >
-      <img src={url} className="d-block w-100 border" alt={title}/>
+      <img src={url} className="d-block w-100 border rounded" alt={title}/>
 
       <div className="carousel-caption d-none d-md-block" 
         style={{background:"black", opacity:"0.7"}}>
-        <h5>{title}</h5>
-        <p>{description}</p>
+        {title?<h5>{title}</h5>:undefined}
+        {description?<p>{description}</p>:undefined}
       </div>
     </div>
 
@@ -56,8 +56,8 @@ function Carousel(props:{images: {url:string, name:string, description:string}[]
       <div className="carousel-indicators">
         {props.images.map((_, i)=>oneCarouselIndicator(i, i === activeIdx))}
       </div>
-      <div className="carousel-inner">
-        {props.images.map((p, i)=>oneCarousel(i, p.url, p.name, p.description, i === activeIdx))}
+      <div className="carousel-inner d-flex">
+        {props.images.map((p, i)=>oneCarousel(i, p.url, i === activeIdx, p.title, p.description))}
       </div>
       <button className="carousel-control-prev" data-bs-target="" type="button" onClick={handlePrev}
         style={{background:"grey"}}

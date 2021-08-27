@@ -30,8 +30,9 @@ function Carousel(props:{images: {url:string, name:string, description:string}[]
     setActiveIdx(idx)
   }
 
-  const oneCarousel = (url:string, title:string, description:string, isActive:boolean)=>
+  const oneCarousel = (idx:number, url:string, title:string, description:string, isActive:boolean)=>
     <div 
+      key={idx}
       className={classNames("carousel-item", isActive?"active":undefined)}
       // style={{width:"60%"}}
     >
@@ -45,7 +46,7 @@ function Carousel(props:{images: {url:string, name:string, description:string}[]
     </div>
 
   const oneCarouselIndicator = (idx:number, isActive:boolean) => 
-    <button type="button" data-bs-target="" 
+    <button key={idx} type="button" data-bs-target="" 
       className={classNames(isActive?"active":undefined)}
       onClick={()=>handleIndicatorClick(idx)}
     ></button>
@@ -56,7 +57,7 @@ function Carousel(props:{images: {url:string, name:string, description:string}[]
         {props.images.map((_, i)=>oneCarouselIndicator(i, i === activeIdx))}
       </div>
       <div className="carousel-inner">
-        {props.images.map((p, i)=>oneCarousel(p.url, p.name, p.description, i === activeIdx))}
+        {props.images.map((p, i)=>oneCarousel(i, p.url, p.name, p.description, i === activeIdx))}
       </div>
       <button className="carousel-control-prev" data-bs-target="" type="button" onClick={handlePrev}
         style={{background:"grey"}}

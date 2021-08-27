@@ -167,7 +167,7 @@ function ProjectThumbnail(props:{detail:Project}) {
     <div 
       className="m-2"
     >
-      <Link to={"/"+p.id}>
+      <Link to={"/"+p.id+"#"+p.id}>
         <img src={p.coverUrl} className="img-thumbnail" alt={p.name}/>
       </Link>
     </div>

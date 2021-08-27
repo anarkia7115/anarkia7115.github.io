@@ -14,12 +14,12 @@
     "react-router-dom": "^5.2.0"
   },
   "scripts": {
-    "dev": "parcel src/index.html"
+    "dev": "parcel src/index.html",
+    "build": "PARCEL_WOKERS=0 parcel build src/index.html"
   },
   "devDependencies": {
     "@parcel/transformer-image": "2.0.0-rc.0",
     "@types/react-router-dom": "^5.1.8",
-    "parcel": "^2.0.0-rc.0",
-    "sharp": "^0.29.0"
+    "parcel": "^2.0.0-rc.0"
   }
 }

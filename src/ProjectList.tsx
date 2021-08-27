@@ -1,26 +1,36 @@
 import React from "react";
 
 // @ts-ignore
-import housingInfoCoverUrl from "url:./screenshots/housing_info.png?width=200&height=200";
+import housingInfoCoverUrl from "url:./screenshots/housing_info.png?width=200&height=200&as=webp";
 // @ts-ignore
-import newsSnorkelCoverUrl from "url:./screenshots/news_snorkel-entity-graph.png?width=200&height=200";
+import newsSnorkelCoverUrl from "url:./screenshots/news_snorkel-entity-graph.png?width=200&height=200&as=webp";
 // @ts-ignore
-import scrapeHelperCoverUrl from "url:./screenshots/scrape_helper-news.png?width=200&height=200";
+import scrapeHelperCoverUrl from "url:./screenshots/scrape_helper-news.png?width=200&height=200&as=webp";
 
 // @ts-ignore
-import housingInfoSsUrl from "url:./screenshots/housing_info.png"
+import housingInfoSsUrl from "url:./screenshots/housing_info.png?quality=20&as=webp"
 // @ts-ignore
-import newsSnorkelSs0Url from "url:./screenshots/news_snorkel-entity-graph.png"
+import newsSnorkelSs0Url from "url:./screenshots/news_snorkel-entity-graph.png?quality=20&as=webp"
 // @ts-ignore
-import newsSnorkelSs1Url from "url:./screenshots/news_snorkel-snorkel-label_function.png"
+import newsSnorkelSs1Url from "url:./screenshots/news_snorkel-snorkel-label_function.png?quality=20&as=webp"
 // @ts-ignore
-import newsSnorkelSs2Url from "url:./screenshots/news_snorkel-span_query.png"
+import newsSnorkelSs2Url from "url:./screenshots/news_snorkel-span_query.png?quality=20&as=webp"
 // @ts-ignore
-import scrapeHelperSs0Url from "url:./screenshots/scrape_helper-news.png"
+import scrapeHelperSs0Url from "url:./screenshots/scrape_helper-news.png?quality=20&as=webp"
 // @ts-ignore
-import scrapeHelperSs1Url from "url:./screenshots/scrape_helper-selectors.png"
+import scrapeHelperSs1Url from "url:./screenshots/scrape_helper-selectors.png?quality=20&as=webp"
 // @ts-ignore
-import scrapeHelperSs2Url from "url:./screenshots/scrape_helper-spider.png"
+import scrapeHelperSs2Url from "url:./screenshots/scrape_helper-spider.png?quality=20&as=webp"
+// @ts-ignore
+import timelineCoverUrl from "url:./screenshots/github_timeline.png?width=200&height=200&as=webp"
+// @ts-ignore
+import timelineSsUrl from "url:./screenshots/github_timeline.png?quality=20&as=webp"
+// @ts-ignore
+import newsVisCoverUrl from "url:./screenshots/news-vis-news.png?width=200&height=200&as=webp"
+// @ts-ignore
+import newsVisSs0Url from "url:./screenshots/news-vis-news.png?quality=20&as=webp"
+// @ts-ignore
+import newsVisSs1Url from "url:./screenshots/news-vis-customer-reviews.png?quality=20&as=webp"
 
 import {
   Link, 
@@ -40,14 +50,14 @@ interface Project {
 
 const projects:Project[] = [
   {
-    name: "Housing Info", 
+    name: "Data-viz for renting v2", 
     coverUrl: housingInfoCoverUrl, 
     path: "/housing_info", 
     description: "Make renters find house easier. ", 
     screenShotUrls: [housingInfoSsUrl], 
   }, 
   {
-    name:"News Snorkel", 
+    name:"Knowledge Exploration System for News", 
     coverUrl: newsSnorkelCoverUrl, 
     path: "/news_snorkel", 
     description: "Explore Knowledge visually in news. ", 
@@ -59,6 +69,24 @@ const projects:Project[] = [
     path: "/scrape_helper", 
     description: "Makes the construction of web scraper easier. ", 
     screenShotUrls: [scrapeHelperSs0Url, scrapeHelperSs1Url, scrapeHelperSs2Url]
+  }, 
+  {
+    name:"Github timeline", 
+    coverUrl: timelineCoverUrl, 
+    path: "/timeline", 
+    description: "This project visualized my github project timeline using bokeh. ",
+    screenShotUrls: [timelineSsUrl]
+  }, 
+  {
+    name: "Sentimental Analysis Visualization on Any Web Page", 
+    coverUrl: newsVisCoverUrl, 
+    path: "/news_vis", 
+    description: "It's a chrome extension which visualize sentimental analysis results on web pages directly. "+
+    "It can visualize sentimental analysis results of any web pages including "+
+    "news, customer reviews and social media. "+
+    "The views of visualization including highlight of text content based on "+
+    "sentiment score and keyword network based on co-occurrence in sentence. ", 
+    screenShotUrls: [newsVisSs0Url, newsVisSs1Url]
   }
 ]
 
@@ -82,8 +110,8 @@ function ProjectList() {
       <Router>
         {projectsComp}
         <Switch>
-          {projects.map(p=>
-            <Route path={p.path}>
+          {projects.map((p)=>
+            <Route key={p.name} path={p.path}>
               <ProjectDetail detail={p}/>
             </Route>
           )}

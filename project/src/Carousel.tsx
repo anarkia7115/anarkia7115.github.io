@@ -1,29 +1,38 @@
 import classNames from "classnames"
 import { useState } from "react"
 
-function Carousel(props:{images: {url:string, title?:string, description?:string}[]}) {
+interface IProps {
+  images: {
+    url:string
+    title?:string
+    description?:string
+  }[]
+  onNextProj: ()=>void
+  onPrevProj: ()=>void
+}
+
+function Carousel(props:IProps) {
 
   const [activeIdx, setActiveIdx] = useState(0)
 
-  function handlePrev() {
-    setActiveIdx(i=>{
-      const newIdx = i-1
-      if (newIdx >=0 && newIdx < props.images.length) {
-        return newIdx
-      }
-      return props.images.length-1
-    })
+  function handlePrevPic() {
+    const newIdx = activeIdx-1
+
+    if (newIdx >=0 && newIdx < props.images.length) {
+      setActiveIdx(newIdx)
+    } else {
+      props.onPrevProj()
+    }
   }
 
 
-  function handleNext() {
-    setActiveIdx(i=>{
-      const newIdx = i+1
-      if (newIdx >=0 && newIdx < props.images.length) {
-        return newIdx
-      }
-      return 0
-    })
+  function handleNextPic() {
+    const newIdx = activeIdx+1
+    if (newIdx >=0 && newIdx < props.images.length) {
+      setActiveIdx(newIdx)
+    } else {
+      props.onNextProj()
+    }
   }
 
   function handleIndicatorClick(idx:number) {
@@ -59,13 +68,13 @@ function Carousel(props:{images: {url:string, title?:string, description?:string
       <div className="carousel-inner d-flex">
         {props.images.map((p, i)=>oneCarousel(i, p.url, i === activeIdx, p.title, p.description))}
       </div>
-      <button className="carousel-control-prev" data-bs-target="" type="button" onClick={handlePrev}
+      <button className="carousel-control-prev" data-bs-target="" type="button" onClick={handlePrevPic}
         style={{background:"grey"}}
       >
         <span className="carousel-control-prev-icon"></span>
         <span className="visually-hidden">Previous</span>
       </button>
-      <button className="carousel-control-next" data-bs-target="" type="button" onClick={handleNext}
+      <button className="carousel-control-next" data-bs-target="" type="button" onClick={handleNextPic}
         style={{background:"grey"}}
       >
         <span className="carousel-control-next-icon"></span>

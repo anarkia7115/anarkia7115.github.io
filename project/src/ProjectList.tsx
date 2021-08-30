@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // @ts-ignore
 import housingInfoCoverUrl from "url:./screenshots/housing_info.png?width=200&height=200&as=webp";
@@ -34,11 +34,13 @@ import newsVisSs1Url from "url:./screenshots/news-vis-customer-reviews.png?quali
 
 import {
   Link, 
-  BrowserRouter as Router,
   Switch,
   Route,
+  useHistory,
+  useLocation,
 } from "react-router-dom";
 import Carousel from "./Carousel";
+import classNames from "classnames";
 
 interface Screenshot {
   url: string
@@ -132,42 +134,94 @@ const projects:Project[] = [
 
 function ProjectList() {
   const pInRow = 3
-  const projectsComp = [...Array(Math.ceil(projects.length / pInRow)).keys()]
+
+  const history = useHistory()
+  const location = useLocation()
+  const [selectedProjectId, setSelectedProjectId] = useState("")
+
+  useEffect(() => {
+    setSelectedProjectId(location.pathname.replace("/", ""))
+  }, [location])
+
+  const handleNextProj=(currProjIdx:number)=>()=>{
+    /**
+     * set route to next project
+     */
+    const nextProjIdx = (currProjIdx+1 >= projects.length)?0:(currProjIdx+1)
+    const nextProjUrl = "/" + projects[nextProjIdx].id
+    history.push(nextProjUrl)
+  }
+
+
+  const handlePrevProj=(currProjIdx:number)=>()=>{
+    /**
+     * set route to prev project
+     */
+    const prevProjIdx = (currProjIdx-1 < 0)?(projects.length-1):(currProjIdx-1)
+    const prevProjUrl = "/" + projects[prevProjIdx].id
+    history.push(prevProjUrl)
+  }
+
+  const thumbnailsComp = [...Array(Math.ceil(projects.length / pInRow)).keys()]
     .map(rowId=>{
       /* row of projects */
       console.log(`${rowId*pInRow}, ${rowId*(pInRow+1)}`)
       return <div key={rowId} className="d-flex justify-content-center">
         {projects.slice(rowId*pInRow, (rowId+1)*pInRow)
           .map((p, i)=>
-            <ProjectThumbnail key={i}
-              detail={p}/>
+            <ProjectThumbnail 
+              key={i}
+              detail={p}
+              selected={(p.id === selectedProjectId)}
+            />
           )}
       </div>
     })
+
   return(
     <div className="mb-5">
       <h2 className="text-center">Projects</h2>
-      <Router>
-        {projectsComp}
+        {thumbnailsComp}
+        <div id="project-detail" style={{minHeight:"100%"}}>
         <Switch>
-          {projects.map((p)=>
+          {projects.map((p, i)=>
             <Route key={p.name} path={"/"+p.id}>
-              <ProjectDetail id={p.id} detail={p}/>
+              <ProjectDetail 
+                id={p.id} 
+                detail={p}
+                onNextProj={handleNextProj(i)}
+                onPrevProj={handlePrevProj(i)}
+                />
             </Route>
           )}
         </Switch>
-      </Router>
+        </div>
     </div>
   )
 }
 
-function ProjectThumbnail(props:{detail:Project}) {
+function ProjectThumbnail(props:{
+  detail:Project
+  selected:boolean
+}) {
   const p = props.detail
+  var style:React.CSSProperties = {}
+  if(props.selected) {
+    style = {
+      border: "solid", 
+      borderColor: "lightgreen", 
+      borderRadius: "2%", 
+      borderWidth: "5px", 
+    }
+  }
+
   return(
     <div 
-      className="m-2"
+      className={classNames("m-2")}
+      title={props.detail.name}
+      style={style}
     >
-      <Link to={"/"+p.id+"#"+p.id}>
+      <Link to={"/"+p.id}>
         <img src={p.coverUrl} className="img-thumbnail" alt={p.name}/>
       </Link>
     </div>
@@ -175,16 +229,29 @@ function ProjectThumbnail(props:{detail:Project}) {
   )
 }
 
-function ProjectDetail(props:{id:string, detail:Project}) {
+interface IProps {
+  id:string
+  detail:Project
+  onNextProj: ()=>void
+  onPrevProj: ()=>void
+}
+
+function ProjectDetail(props:IProps) {
   const p = props.detail
+
   return (
     <div id={props.id}>
       <h3>{p.name}</h3>
       <p>{p.description}</p>
-      <Carousel key={p.name} images={p.screenshots.map(ss=>({
-        url: ss.url, 
-        title: ss.description, 
-      }))}/>
+      <Carousel 
+        key={p.name} 
+        images={p.screenshots.map(ss=>({
+          url: ss.url, 
+          title: ss.description, 
+        }))}
+        onNextProj={props.onNextProj}
+        onPrevProj={props.onPrevProj}
+      />
 
     </div>
   )

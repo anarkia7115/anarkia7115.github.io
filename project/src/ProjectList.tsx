@@ -32,6 +32,9 @@ import newsVisSs0Url from "url:./screenshots/news-vis-news.png?quality=20&as=web
 // @ts-ignore
 import newsVisSs1Url from "url:./screenshots/news-vis-customer-reviews.png?quality=20&as=webp"
 
+// @ts-ignore
+import movieLogoCoverUrl from "url:./logo/imdb_logo.png?width=200&height=200&as=webp"
+
 import {
   Link, 
   Switch,
@@ -53,6 +56,7 @@ interface Project {
   id: string
   description: string
   screenshots: Screenshot[]
+  externalUrl?: string
 }
 
 const projects:Project[] = [
@@ -66,7 +70,6 @@ const projects:Project[] = [
       description: "hexbin heatmap, "+
     "price histogram, "+
     "and house around mouse. ",
-
     }], 
   }, 
   {
@@ -129,6 +132,14 @@ const projects:Project[] = [
       url:newsVisSs1Url, 
       description: "Sentiment analysis on amazon product reviews. "
     }]
+  }, 
+  {
+    name: "Movie Recommendation using Spark", 
+    coverUrl: movieLogoCoverUrl, 
+    id: "movie_spark", 
+    description: "Movie Data Analysis using Spark", 
+    screenshots: [], 
+    externalUrl: "/movie_spark.html",
   }
 ]
 
@@ -173,6 +184,7 @@ function ProjectList() {
               key={i}
               detail={p}
               selected={(p.id === selectedProjectId)}
+              externalLink={p.externalUrl}
             />
           )}
       </div>
@@ -201,8 +213,9 @@ function ProjectList() {
 }
 
 function ProjectThumbnail(props:{
-  detail:Project
-  selected:boolean
+  detail: Project
+  selected: boolean
+  externalLink?: string
 }) {
   const p = props.detail
   var style:React.CSSProperties = {}
@@ -221,9 +234,14 @@ function ProjectThumbnail(props:{
       title={props.detail.name}
       style={style}
     >
-      <Link to={"/"+p.id}>
+      {props.externalLink
+      ?<a href={props.externalLink}>
+        <img src={p.coverUrl} className="img-thumbnail" alt={p.name}/>
+      </a>
+      :<Link to={"/"+p.id}>
         <img src={p.coverUrl} className="img-thumbnail" alt={p.name}/>
       </Link>
+      }
     </div>
     
   )
